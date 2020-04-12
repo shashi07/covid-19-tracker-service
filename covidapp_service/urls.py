@@ -19,4 +19,5 @@ from datasources import views
 from datasources.admin import admin_site
 urlpatterns = [
     path('admin/', admin_site.urls),
-    path('api/',include('datasources.urls'
+    path('api/', include('datasources.urls'))
+    ]

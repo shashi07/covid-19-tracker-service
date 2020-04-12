@@ -3,7 +3,7 @@ from django.contrib.admin import AdminSite
 from django.http import HttpResponse
 from django.shortcuts import render
 from django import forms
-from .models import BaseData
+from .models import BaseData, StateRefreshData, ConsolidatedData
 import csv
 from datetime import datetime
 import io
@@ -16,6 +16,7 @@ class DataInput(forms.Form):
 
     def save(self):
         records = csv.reader(io.TextIOWrapper(self.cleaned_data["file"].file))
+        objs = []
         for line in records:
             input_data = BaseData()
             input_data.country = self.cleaned_data["country"]
@@ -23,7 +24,8 @@ class DataInput(forms.Form):
             input_data.state = line[3]
             input_data.confirmed_cases = int(line[8])
             input_data.deaths = line[7]
-            input_data.save()
+            objs.append(input_data)
+        BaseData.objects.bulk_create(objs)
 
 class CustomAdminSite(AdminSite):
 
@@ -54,3 +56,5 @@ admin_site = CustomAdminSite()
 
 
 admin_site.register(BaseData)
+admin_site.register(StateRefreshData)
+admin_site.register(ConsolidatedData)

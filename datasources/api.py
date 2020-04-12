@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import BaseData
+from .models import BaseData, StateRefreshData, ConsolidatedData
+from .serializers import ConsolidatedDataSerializer
 from django.db.models import Sum, Max
 from .utils import success, error
 import pandas as pd
@@ -76,5 +77,38 @@ class GetCountryLevelCases(APIView):
             for d in data["data"]:
                 d["date"] = d["date"].split("T")[0]
             return Response(data["data"])
+        except KeyError:
+            return Response(error("No State provided in query param"))
+
+
+class GetDistrictLevelRefreshCases(APIView):
+    """
+    List all snippets, or create a new snippet.
+    """
+    def get(self, request, format=None):
+        try:
+            response = []
+            state = request.query_params["state"]
+            data = StateRefreshData.objects.filter(state=state)
+            print(data)
+            for d in data:
+                t = {}
+                t["name"] = d.district
+                t["value"] = d.confirmed_cases
+                response.append(t)
+            return Response(response)
+        except KeyError:
+            return Response(error("No State provided in query param"))
+
+
+class GetConsolidatedData(APIView):
+
+    def get(self, request, format=None):
+        try:
+            response = []
+            entity = request.query_params["view"]
+            data = ConsolidatedData.objects.get(entity=entity)
+            serializer = ConsolidatedDataSerializer(data)
+            return Response(serializer.data)
         except KeyError:
             return Response(error("No State provided in query param"))

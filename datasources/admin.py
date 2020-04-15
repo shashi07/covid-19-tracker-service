@@ -3,7 +3,7 @@ from django.contrib.admin import AdminSite
 from django.http import HttpResponse
 from django.shortcuts import render
 from django import forms
-from .models import BaseData, StateRefreshData, ConsolidatedData
+from .models import *
 import csv
 from datetime import datetime
 import io
@@ -58,3 +58,6 @@ admin_site = CustomAdminSite()
 admin_site.register(BaseData)
 admin_site.register(StateRefreshData)
 admin_site.register(ConsolidatedData)
+admin_site.register(ComparisionData)
+admin_site.register(StateWiseData)
+admin_site.register(AgeWiseData)

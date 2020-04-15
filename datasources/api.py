@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import BaseData, StateRefreshData, ConsolidatedData
-from .serializers import ConsolidatedDataSerializer
+from .models import *
+from .serializers import *
 from django.db.models import Sum, Max
 from .utils import success, error
 import pandas as pd
@@ -109,6 +109,40 @@ class GetConsolidatedData(APIView):
             entity = request.query_params["view"]
             data = ConsolidatedData.objects.get(entity=entity)
             serializer = ConsolidatedDataSerializer(data)
+            return Response(serializer.data)
+        except KeyError:
+            return Response(error("No State provided in query param"))
+
+
+class GetComparisionData(APIView):
+
+    def get(self, request, format=None):
+        try:
+            data = ComparisionData.objects.all()
+            serializer = ComparisionDataSerializer(data,many=True)
+            return Response(serializer.data)
+        except KeyError:
+            return Response(error("No State provided in query param"))
+
+
+class GetStateWiseComparisionData(APIView):
+
+    def get(self, request, format=None):
+        try:
+
+            data = StateWiseData.objects.all()
+            serializer = StateWiseComparisionSerializer(data, many=True)
+            return Response(serializer.data)
+        except KeyError:
+            return Response(error("No State provided in query param"))
+
+
+class GetAgeWiseData(APIView):
+
+    def get(self, request, format=None):
+        try:
+            data = AgeWiseData.objects.all()
+            serializer = AgeWiseSerializer(data, many=True)
             return Response(serializer.data)
         except KeyError:
             return Response(error("No State provided in query param"))

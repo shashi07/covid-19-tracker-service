@@ -39,3 +39,39 @@ class ConsolidatedData(models.Model):
 
     def __str__(self):
         return self.entity + "-" + str(self.confirmed_cases)
+
+
+class ComparisionData(models.Model):
+
+    variable = models.CharField(max_length=100)
+    world = models.CharField(max_length=100)
+    india = models.CharField(max_length=100)
+    maharashtra = models.CharField(max_length=100)
+    as_of_date = models.DateTimeField()
+
+    def __str__(self):
+        return self.variable + "-" + str(self.world)
+
+
+class StateWiseData(models.Model):
+
+    state = models.CharField(max_length=100)
+    cases = models.IntegerField(default=0)
+    deaths = models.IntegerField(default=0)
+    mortality = models.FloatField(default=0.0)
+    as_of_date = models.DateTimeField()
+
+    def __str__(self):
+        return self.state + "-" + str(self.cases)
+
+
+class AgeWiseData(models.Model):
+
+    age_group = models.CharField(max_length=100)
+    cases = models.IntegerField(default=0)
+    deaths = models.IntegerField(default=0)
+    mortality = models.FloatField(default=0.0)
+    as_of_date = models.DateTimeField()
+
+    def __str__(self):
+        return self.age_group + "-" + str(self.cases)
